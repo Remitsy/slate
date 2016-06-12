@@ -47,21 +47,22 @@ curl --request POST \
 https://remitsy-demo.herokuapp.com/apis/rates/v1/rates
 ```
 
-> Make sure to replace `meowmeowmeow` with your API key.
+> Make sure to replace `134231fd3r232rf32r` with your API key.
 
-Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
+1. Get a Quote
+2. Get a API key
+3. Submit a Payment
+4. Check status of Payment
 
-Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
-
-`Authorization: meowmeowmeow`
+`Authorization: 134231fd3r232rf32r`
 
 <aside class="notice">
-You must replace `meowmeowmeow` with your personal API key.
+You must replace `134231fd3r232rf32r` with your personal API key.
 </aside>
 
-# Kittens
+# Quotes
 
-## Get All Kittens
+## Get a Quote
 
 ```ruby
 require 'kittn'
@@ -103,24 +104,27 @@ curl "http://example.com/api/kittens"
 ]
 ```
 
-This endpoint retrieves all kittens.
+This endpoint retrieves all of your Payments.
 
 ### HTTP Request
 
-`GET http://example.com/kittens`
+`GET https://remitsy-demo.herokuapp.com/apis/rates/v1/rates`
 
 ### Query Parameters
 
 Parameter | Default | Description
 --------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
+quote[source_currency] | USD | Currently supports HKD, EUR, USD, GBP, PLN
+quote[source_cents] | 0 | Must be a Integer
+quote[quote_currency] | CNY | FYI Only, unchangable
+quote[quote_cents] | 0 | Must be a Integer
+quote[arrive_by] | 72 hours | Unix timestamp, Different fees for 12 hours and 72 hours.
 
 <aside class="success">
-Remember — a happy kitten is an authenticated kitten!
+Remember — Quotes will expire if not used to make a booking withing 30 minutes!
 </aside>
 
-## Get a Specific Kitten
+## Book a Payment
 
 ```ruby
 require 'kittn'
@@ -159,7 +163,7 @@ This endpoint retrieves a specific kitten.
 
 ### HTTP Request
 
-`GET http://example.com/kittens/<ID>`
+`GET http://example.com/rate/<ID>`
 
 ### URL Parameters
 
