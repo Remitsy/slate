@@ -35,7 +35,7 @@ Book a Payment:
 
 To receive an API key, please accept the terms below.
 
-ELANCE, INC.
+REMITSY, LTD.
 BETA API TERMS OF USE
 
 This document governs the terms under which you may access and use Remitsy, Inc.'s ("Remitsy") application programming interface that is made available on this website (the "API"), and the data transmitted through the API (the "RemistyContent"). The API includes any API key or keys used to access the API.  This document incorporates the terms of the Remitsy Site Usage Policy and the other agreements and policies linked from the Remitsy Site Usage Policy, including all future amendments or modifications thereto (collectively, and together with this document, the "Beta API Terms of Use"):
