@@ -177,13 +177,13 @@ error[source_cents] | Your account has insufficient funds to cover this Quote. P
 curl -X POST \
 -H 'Authorization: Token token="<API KEY>"' \
 -H "Content-Type: text/plain; charset=UTF-8" \
--d "token=xxxxxxxxxxx" \
--d "alipay_id=1235812895" \
--d "email=richard@163.com" \
--d "phone=13810456155" \
--d "name_cn=贝礼德" \
--d "immediate_release=false" \
--d "identity_card_number=110101198109022323" \
+-d "payment[token]=xxxxxxxxxxx" \
+-d "payment[alipay_id]=1235812895" \
+-d "payment[email]=richard@163.com" \
+-d "payment[phone]=13810456155" \
+-d "payment[name_cn]=贝礼德" \
+-d "payment[immediate_release]=false" \
+-d "payment[identity_card_number]=110101198109022323" \
 https://sandbox.remitsy.com/apis/general/v1/new
 ```
 
@@ -300,14 +300,14 @@ error[token] | Invalid token, no Quote found.
 curl -X POST \
 -H 'Authorization: Token token="<API KEY>"' \
 -H "Content-Type: text/plain; charset=UTF-8" \
--d "email=richard@163.com" \
--d "phone=13810456155" \
--d "name_cn=贝礼德" \
--d "identity_card_number=110101198109022323" \
--d "bank_account_number=6212260200082726700" \
--d "bank_account_name=中国银行" \
--d "bank_account_city=北京" \
--d "bank_account_branch=朝阳门支行" \
+-d "payment[email]=richard@163.com" \
+-d "payment[phone]=13810456155" \
+-d "payment[name_cn]=贝礼德" \
+-d "payment[identity_card_number]=110101198109022323" \
+-d "payment[bank_account_number]=6212260200082726700" \
+-d "payment[bank_account_name]=中国银行" \
+-d "payment[bank_account_city]=北京" \
+-d "payment[bank_account_branch]=朝阳门支行" \
 https://sandbox.remitsy.com/apis/general/v1/new
 ```
 
@@ -607,7 +607,8 @@ https://sandbox.remitsy.com/apis/general/v1/status
 }
 ```
 
-This endpoint cancels an unreleased payment.
+This endpoint provides the details and status of any of yours payments. 
+Additionally useful in debugging and automated testing in a sandbox environment. 
 
 ### HTTP Request
 
