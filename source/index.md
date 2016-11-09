@@ -261,7 +261,7 @@ Use a Quote token to book a new AliPay Payment at the quoted rate.
 Parameter | Type | Default | Description
 --------- | ---- | ------- | -----------
 payment[alipay_id] | String(255) | | Like a PayPal ID, can be a email, phone number or serial number.
-payment[email] | String(255) | | The Recipient's email, used for notifications.
+payment[email] | String(255) | | **Optional**, the Recipient's email, used for notifications.
 payment[phone] | String(255) | | The Recipient's phone number, used for KYC and notifications. 
 payment[name_cn] | String(255) | | Full name in simplified Chinese Characters UTF-8 encoded.
 payment[identity_card_number] | String(18) | | National ID card, used for KYC.
@@ -389,7 +389,7 @@ Use a Quote token to book a new Payment at the quoted rate.
 
 Parameter | Type | Default | Description
 --------- | ---- | ------- | -----------
-payment[email] | String(255) | | The Recipient's email, used for notifications.
+payment[email] | String(255) | | **Optional**, the Recipient's email, used for notifications.
 payment[phone] | String(255) | | The Recipient's phone number, used for KYC and notifications. 
 payment[name_cn] | String(255) | | Full name in simplified Chinese Characters UTF-8 encoded.
 payment[identity_card_number] | String(18) | | National ID card, used for KYC.
@@ -626,7 +626,7 @@ payment[payment_ref] | String(6) | A unique reference to a Payment
 
 Parameter | Type | Default | Description
 --------- | ---- | ------- | -----------
-payment[email] | String(255) | | The recipient's email. Used for notification.
+payment[email] | String(255) | | **Optional**, the recipient's email. Used for notification.
 payment[phone] | String(255) | | The recipient's phone number. Used for KYC and SMS notification
 payment[bank_account_number] | String(19) | | Recipient's Chinese bank account number
 payment[bank_account_name] | String(255) | | Recipient's Chinese account name
