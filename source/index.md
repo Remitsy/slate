@@ -35,8 +35,7 @@ Book a Payment:
 # With shell, you can just pass the correct header with each request
 curl -X GET \
 -H 'Authorization: Token token=<API KEY>' \
--H "Content-Type: text/plain; charset=UTF-8" \
-http://sandbox.remitsy.com/apis/general/v1/ping
+http://sandbox.remitsy.com/apis/pro/v1/ping
 ```
 
 HTTP Token authentication, passed in the header. 
@@ -48,7 +47,7 @@ Requests without a valid API key will return:
 <code>
     Code: 401 UNAUTHORIZED
 
-    Content: { error : "unauthorized access"  }
+    Content: {"errors":["HTTP Token: Access denied. You did not provide a valid API key."]}
 </code>
 
 > Make sure to replace `<API KEY>` with your API key.
@@ -62,10 +61,9 @@ Requests without a valid API key will return:
 ```shell
 curl --request POST \
 -H 'Authorization: Token token=<API KEY>' \
--H "Content-Type: text/plain; charset=UTF-8" \
 -d 'quote[source_currency]=USD' \
 -d 'quote[source_cents]=10000' \
-https://sandbox.remitsy.com/apis/general/v1/rates
+https://sandbox.remitsy.com/apis/pro/v1/rates
 ```
 
 > The above command returns JSON structured like this:
@@ -91,9 +89,7 @@ https://sandbox.remitsy.com/apis/general/v1/rates
     "can't be blank"
   ],
   "source_cents": [
-    "can't be blank",
-    "Must be an integer",
-    "Your account has insufficient funds to cover this Quote. Please contact support@remitsy.com"
+    "Must be an integer"
   ]}
 } 
 ```
@@ -119,7 +115,7 @@ which is used to claim the quoted exchange rate in a subsequent Payment booking.
 
 ### HTTP Request
 
-`POST https://sandbox.remitsy.com/apis/general/v1/rates`
+`POST https://sandbox.remitsy.com/apis/pro/v1/rates`
 
 ### Request Parameters
 
@@ -162,13 +158,6 @@ Parameter | Description
 error[source_currency] | Must be one of HKD EUR USD PLN GBP. 
 error[source_cents] | Must be an integer. 
 
-`Status 402 PAYMENT REQUIRED`
-
-Parameter | Description
---------- | -----------
-error[source_cents] | Your account has insufficient funds to cover this Quote. Please contact support@remitsy.com. 
-
-
 ## Book an AliPay Payment
 
 > For AliPay Payment
@@ -176,7 +165,6 @@ error[source_cents] | Your account has insufficient funds to cover this Quote. P
 ```shell
 curl -X POST \
 -H 'Authorization: Token token="<API KEY>"' \
--H "Content-Type: text/plain; charset=UTF-8" \
 -d "payment[token]=xxxxxxxxxxx" \
 -d "payment[alipay_id]=1235812895" \
 -d "payment[email]=richard@163.com" \
@@ -184,7 +172,7 @@ curl -X POST \
 -d "payment[name_cn]=贝礼德" \
 -d "payment[immediate_release]=false" \
 -d "payment[identity_card_number]=110101198109022323" \
-https://sandbox.remitsy.com/apis/general/v1/new
+https://sandbox.remitsy.com/apis/pro/v1/new
 ```
 
 > The above commands returns JSON structured like this:
@@ -202,8 +190,7 @@ https://sandbox.remitsy.com/apis/general/v1/new
     "Expired Quote"
   ],
   "name_cn": [
-    "can't be blank",
-    "Must be Chinese Characters, UTF-8 encoded."
+    "can't be blank"
   ],
   "email":[
     "invalid Email",
@@ -218,8 +205,7 @@ https://sandbox.remitsy.com/apis/general/v1/new
     "Failed Checksum"
   ],
   "alipay_id": [
-    "can't be blank",
-    "Invalid AliPay ID"              
+    "can't be blank"
   ]}
 }
 ```
@@ -254,7 +240,7 @@ Use a Quote token to book a new AliPay Payment at the quoted rate.
 
 ### HTTP Request
 
-`POST https://sandbox.remitsy.com/apis/general/v1/alipay`
+`POST https://sandbox.remitsy.com/apis/pro/v1/alipay`
 
 ### Request Parameters
 
@@ -280,9 +266,10 @@ payment[payment_ref] | String(8) | For future reference.
 
 Parameter | Description
 --------- | -----------
+error[alipay_id] | Required Field 
 error[phone] | `^(13[0-9]&#124;14[57]&#124;15[012356789]&#124;17[0678]&#124;18[0-9])[0-9]{8}$` 
 error[email] | `/\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i`
-error[name_cn] | Must be Chinese Characters, UTF-8 encoded.
+error[name_cn] | Required Field
 error[identity_card_number] | Must pass the checksum
 error[immediate_release] | Must be either true or false
 
@@ -299,7 +286,6 @@ error[token] | Invalid token, no Quote found.
 ```shell
 curl -X POST \
 -H 'Authorization: Token token="<API KEY>"' \
--H "Content-Type: text/plain; charset=UTF-8" \
 -d "payment[email]=richard@163.com" \
 -d "payment[phone]=13810456155" \
 -d "payment[name_cn]=贝礼德" \
@@ -326,24 +312,20 @@ https://sandbox.remitsy.com/apis/general/v1/new
     "Expired Quote"
   ],
   "name_cn": [
-    "can't be blank",
-    "Must be Chinese Characters, UTF-8 encoded."
+    "can't be blank"
   ],
   "bank_account_number": [
     "can't be blank",
     "invalid"
   ],
   "bank_account_name": [
-    "can't be blank",
-    "Must be Chinese Characters, UTF-8 encoded."
+    "can't be blank"
   ],
   "bank_account_city": [
-    "can't be blank",
-    "Must be Chinese Characters, UTF-8 encoded."
+    "can't be blank"
   ],
   "bank_account_branch": [
-    "can't be blank",
-    "Must be Chinese Characters, UTF-8 encoded."
+    "can't be blank"
   ],
   "email":[
     "invalid Email",
@@ -413,12 +395,12 @@ payment[payment_ref] | String(8) | For future reference.
 Parameter | Description
 --------- | -----------
 error[bank_account_number] | `^[0-9]{15,19}$`
-error[bank_account_name] | Full name in simplified Chinese Characters UTF-8 encoded
-error[bank_account_city] | Name in simplified Chinese Characters UTF-8 encoded
-error[bank_account_branch] | Name in simplified Chinese Characters UTF-8 encoded
+error[bank_account_name] | Required field
+error[bank_account_city] | Required field
+error[bank_account_branch] | Required field
 error[phone] | `^(13[0-9]&#124;14[57]&#124;15[012356789]&#124;17[0678]&#124;18[0-9])[0-9]{8}$` 
 error[email] | `/\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i`
-error[name_cn] | Must be Chinese Characters, UTF-8 encoded.
+error[name_cn] | Required Field
 error[identity_card_number] | Failed Checksum
 error[immediate_release] | Must be either true or false
 
@@ -435,7 +417,6 @@ error[token] | Invalid token, no Quote found.
 ```shell
 curl -X POST \
 -H 'Authorization: Token token="<API KEY>"' \
--H "Content-Type: text/plain; charset=UTF-8" \
 -d "payment[payment_ref]=12345678" \
 https://sandbox.remitsy.com/apis/general/v1/release
 ```
@@ -496,7 +477,6 @@ error[payment_ref] | Invalid payment_ref, no Payment found.
 ```shell
 curl -X POST \
 -H 'Authorization: Token token="<API KEY>"' \
--H "Content-Type: text/plain; charset=UTF-8" \
 -d "payment[payment_ref]=12345678" \
 https://sandbox.remitsy.com/apis/general/v1/cancel
 ```
@@ -522,15 +502,13 @@ This endpoint cancels an unreleased payment.
 
 ### HTTP Request
 
-`PATCH https://sandbox.remitsy.com/apis/general/v1/cancel`
+`PATCH https://sandbox.remitsy.com/apis/pro/v1/cancel`
 
 ### Request Parameters
 
 Parameter | Description
 --------- | -----------
 payment[payment_ref] | Use the release_ref to release the payment to the recipient.
-payment[note] | **Optional** Useful to store internal references, for use in follow up correspondence. 
-
 
 ### Response
 
@@ -560,9 +538,8 @@ error[payment_ref] | Invalid payment_ref, no Payment found.
 ```shell
 curl -X POST \
 -H 'Authorization: Token token="<API KEY>"' \
--H "Content-Type: text/plain; charset=UTF-8" \
 -d "payment[payment_ref]=12345678" \
-https://sandbox.remitsy.com/apis/general/v1/status
+https://sandbox.remitsy.com/apis/pro/v1/status
 ```
 
 > The above command returns JSON structured like this:
@@ -612,7 +589,7 @@ Additionally useful in debugging and automated testing in a sandbox environment.
 
 ### HTTP Request
 
-`GET https://sandbox.remitsy.com/apis/general/v1/status`
+`GET https://sandbox.remitsy.com/apis/pro/v1/status`
 
 ### Request Parameters
 
