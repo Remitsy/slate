@@ -35,7 +35,7 @@ Book a Payment:
 # With shell, you can just pass the correct header with each request
 curl --request GET \
 -H 'Authorization: Token token=<API KEY>' \
-https://alpha-remitsy.herokuapp.com/apis/pro/v1/ping
+https://sandbox-remitsy.herokuapp.com/apis/pro/v1/ping
 ```
 
 > The above command returns JSON structured like this:
@@ -69,7 +69,7 @@ curl --request POST \
 -H 'Authorization: Token token=<API KEY>' \
 -d 'quote[source_currency]=USD' \
 -d 'quote[source_cents]=100333' \
-https://alpha-remitsy.herokuapp.com/apis/pro/v1/quote
+https://sandbox-remitsy.herokuapp.com/apis/pro/v1/quote
 ```
 
 > The above command returns JSON structured like this:
@@ -121,7 +121,7 @@ which is used to claim the quoted exchange rate in a subsequent Payment booking.
 
 ### HTTP Request
 
-`POST https://alpha-remitsy.herokuapp.com/apis/pro/v1/rates`
+`POST https://sandbox-remitsy.herokuapp.com/apis/pro/v1/rates`
 
 ### Request Parameters
 
@@ -178,7 +178,7 @@ curl -X POST \
 -d "payment[contact_name]=贝礼德" \
 -d "payment[immediate_release]=false" \
 -d "payment[identity_card_number]=110101198109022323" \
-https://alpha-remitsy.herokuapp.com/apis/pro/v1/alipay
+https://sandbox-remitsy.herokuapp.com/apis/pro/v1/alipay
 ```
 
 > The above commands returns JSON structured like this:
@@ -243,7 +243,7 @@ Use a Quote token to book a new AliPay Payment at the quoted rate.
 
 ### HTTP Request
 
-`POST https://alpha-remitsy.herokuapp.com/apis/pro/v1/alipay`
+`POST https://sandbox-remitsy.herokuapp.com/apis/pro/v1/alipay`
 
 ### Request Parameters
 
@@ -293,7 +293,7 @@ curl -X POST \
 -d "payment[bank_account_name]=中国银行" \
 -d "payment[bank_account_city]=北京" \
 -d "payment[bank_account_branch]=朝阳门支行" \
-https://alpha-remitsy.herokuapp.com/apis/pro/v1/bank_deposit
+https://sandbox-remitsy.herokuapp.com/apis/pro/v1/bank_deposit
 ```
 
 > The above commands returns JSON structured like this:
@@ -361,7 +361,7 @@ Use a Quote token to book a new Payment at the quoted rate.
 
 ### HTTP Request
 
-`POST https://alpha-remitsy.herokuapp.com/apis/pro/v1/bank_deposit`
+`POST https://sandbox-remitsy.herokuapp.com/apis/pro/v1/bank_deposit`
 
 ### Request Parameters
 
@@ -407,13 +407,13 @@ error[immediate_release] | Must be either true or false
 curl -X POST \
 -H 'Authorization: Token token="<API KEY>"' \
 -d "payment[payment_ref]=<PAYMENT_REF>" \
-https://alpha-remitsy.herokuapp.com/apis/pro/v1/release
+https://sandbox-remitsy.herokuapp.com/apis/pro/v1/release
 ```
 
 > The above command returns JSON structured like this:
 
 ```json
-{ "payment": { "release_ref": "12345678" } }
+{ "payment": { "release_ref": "<RELEASE REF>" } }
 ```
 
 > Errors structured like this:
@@ -431,7 +431,7 @@ Releases a payment previously booked with the immediate_release attribute set to
 
 ### HTTP Request
 
-`POST https://alpha-remitsy.herokuapp.com/apis/pro/v1/release`
+`POST https://sandbox-remitsy.herokuapp.com/apis/pro/v1/release`
 
 ### Request Parameters
 
@@ -467,13 +467,13 @@ error[payment_ref] | Invalid payment_ref, no Payment found.
 curl -X POST \
 -H 'Authorization: Token token="<API KEY>"' \
 -d "payment[payment_ref]=<PAYMENT REF>" \
-https://alpha-remitsy.herokuapp.com/apis/pro/v1/cancel
+https://sandbox-remitsy.herokuapp.com/apis/pro/v1/cancel
 ```
 
 > The above command returns JSON structured like this:
 
 ```json
-{ "cancel_ref": "123456" }
+{ "cancel_ref": "<CANCEL REF>" }
 ```
 
 > Errors structured like this:
@@ -491,7 +491,7 @@ This endpoint cancels an unreleased payment.
 
 ### HTTP Request
 
-`POST https://alpha-remitsy.herokuapp.com/apis/pro/v1/cancel`
+`POST https://sandbox-remitsy.herokuapp.com/apis/pro/v1/cancel`
 
 ### Request Parameters
 
@@ -511,7 +511,7 @@ payment[cancel_ref] | String(6) | Please for your future reference
 
 Parameter | Description
 --------- | -----------
-error[payment_ref] | The Payment has already been released at (yyyy:mm:dd hh:mm)
+error[payment_ref] | The Payment has already been released.
 
 `Status 404 NOT FOUND`
 
@@ -528,7 +528,7 @@ error[payment_ref] | Invalid payment_ref, no Payment found.
 curl -X POST \
 -H 'Authorization: Token token="<API KEY>"' \
 -d "payment[payment_ref]=<PAYMENT REF>" \
-https://alpha-remitsy.herokuapp.com/apis/pro/v1/status
+https://sandbox-remitsy.herokuapp.com/apis/pro/v1/status
 ```
 
 > The above command returns JSON structured like this:
@@ -577,7 +577,7 @@ Additionally useful in debugging and automated testing in a sandbox environment.
 
 ### HTTP Request
 
-`GET https://alpha-remitsy.herokuapp.com/apis/pro/v1/status`
+`GET https://sandbox-remitsy.herokuapp.com/apis/pro/v1/status`
 
 ### Request Parameters
 
