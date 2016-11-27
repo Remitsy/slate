@@ -33,9 +33,15 @@ Book a Payment:
 
 ```shell
 # With shell, you can just pass the correct header with each request
-curl -X GET \
+curl --request GET \
 -H 'Authorization: Token token=<API KEY>' \
-http://sandbox.remitsy.com/apis/pro/v1/ping
+https://alpha-remitsy.herokuapp.com/apis/pro/v1/ping
+```
+
+> The above command returns JSON structured like this:
+
+``` 
+{"ping":"pong"}
 ```
 
 HTTP Token authentication, passed in the header. 
@@ -62,15 +68,15 @@ Requests without a valid API key will return:
 curl --request POST \
 -H 'Authorization: Token token=<API KEY>' \
 -d 'quote[source_currency]=USD' \
--d 'quote[source_cents]=10000' \
-https://sandbox.remitsy.com/apis/pro/v1/rates
+-d 'quote[source_cents]=100333' \
+https://alpha-remitsy.herokuapp.com/apis/pro/v1/quote
 ```
 
 > The above command returns JSON structured like this:
 
 ```json
 {"quote": {
-    "token": "<id token>",
+    "token": "<QUOTE TOKEN>",
     "rate": 6.51,
     "currency_pair": "USDCNY",
     "quote_cents": 65100,
@@ -115,7 +121,7 @@ which is used to claim the quoted exchange rate in a subsequent Payment booking.
 
 ### HTTP Request
 
-`POST https://sandbox.remitsy.com/apis/pro/v1/rates`
+`POST https://alpha-remitsy.herokuapp.com/apis/pro/v1/rates`
 
 ### Request Parameters
 
@@ -165,14 +171,14 @@ error[source_cents] | Must be an integer.
 ```shell
 curl -X POST \
 -H 'Authorization: Token token="<API KEY>"' \
--d "payment[token]=xxxxxxxxxxx" \
--d "payment[alipay_id]=1235812895" \
+-d "quote[token]=<QUOTE TOKEN>" \
+-d "payment[alipay_identifier]=1235812895" \
 -d "payment[email]=richard@163.com" \
 -d "payment[phone]=13810456155" \
--d "payment[name_cn]=贝礼德" \
+-d "payment[contact_name]=贝礼德" \
 -d "payment[immediate_release]=false" \
 -d "payment[identity_card_number]=110101198109022323" \
-https://sandbox.remitsy.com/apis/pro/v1/new
+https://alpha-remitsy.herokuapp.com/apis/pro/v1/alipay
 ```
 
 > The above commands returns JSON structured like this:
@@ -186,26 +192,23 @@ https://sandbox.remitsy.com/apis/pro/v1/new
 ```json
 {"errors": {
   "token": [
-    "Invalid Token", 
-    "Expired Quote"
+    "Expired or invalid token"
   ],
-  "name_cn": [
-    "can't be blank"
+  "contact_name": [
+    "Required field"
   ],
   "email":[
-    "invalid Email",
-    "can't be blank"
+    "is invalid",
+    "Required field"
   ],
   "phone":[
-    "Phone number is not valid",
-    "can't be blank"
+    "Required field"
   ],
   "identity_card_number":[
-    "can't be blank",
-    "Failed Checksum"
+    "Required field"
   ],
-  "alipay_id": [
-    "can't be blank"
+  "alipay_identifier": [
+    "Required field"
   ]}
 }
 ```
@@ -240,18 +243,18 @@ Use a Quote token to book a new AliPay Payment at the quoted rate.
 
 ### HTTP Request
 
-`POST https://sandbox.remitsy.com/apis/pro/v1/alipay`
+`POST https://alpha-remitsy.herokuapp.com/apis/pro/v1/alipay`
 
 ### Request Parameters
 
 Parameter | Type | Default | Description
 --------- | ---- | ------- | -----------
-payment[alipay_id] | String(255) | | Like a PayPal ID, can be a email, phone number or serial number.
+payment[alipay_identifier] | String(255) | | Like a PayPal ID, can be a email, phone number or serial number.
 payment[email] | String(255) | | **Optional**, the Recipient's email, used for notifications.
 payment[phone] | String(255) | | The Recipient's phone number, used for KYC and notifications. 
-payment[name_cn] | String(255) | | Full name in simplified Chinese Characters UTF-8 encoded.
+payment[contact_name] | String(255) | | Full name in simplified Chinese Characters UTF-8 encoded.
 payment[identity_card_number] | String(18) | | National ID card, used for KYC.
-payment[token] | String(10) | | Provide a Quote token to claim the rate and amount.
+quote[token] | String(10) | | Provide a Quote token to claim the rate and amount.
 payment[immediate_release] | Boolean(true&#124;false) | true | **Optional**, set to false to hold payment until you release the payment. This allows additional KYC checks to be performed inline with your existing business flows.
 
 ### Response
@@ -266,18 +269,13 @@ payment[payment_ref] | String(8) | For future reference.
 
 Parameter | Description
 --------- | -----------
-error[alipay_id] | Required Field 
+error[token] | Invalid token, no Quote found.
+error[alipay_identifier] | Required Field 
 error[phone] | `^(13[0-9]&#124;14[57]&#124;15[012356789]&#124;17[0678]&#124;18[0-9])[0-9]{8}$` 
 error[email] | `/\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i`
-error[name_cn] | Required Field
+error[contact_name] | Required Field
 error[identity_card_number] | Must pass the checksum
 error[immediate_release] | Must be either true or false
-
-`Status 404 NOT FOUND`
-
-Parameter | Description
---------- | -----------
-error[token] | Invalid token, no Quote found.
 
 ## Book a Bank Payment
 
@@ -286,15 +284,16 @@ error[token] | Invalid token, no Quote found.
 ```shell
 curl -X POST \
 -H 'Authorization: Token token="<API KEY>"' \
+-d "quote[token]=<QUOTE TOKEN>" \
 -d "payment[email]=richard@163.com" \
 -d "payment[phone]=13810456155" \
--d "payment[name_cn]=贝礼德" \
+-d "payment[contact_name]=贝礼德" \
 -d "payment[identity_card_number]=110101198109022323" \
 -d "payment[bank_account_number]=6212260200082726700" \
 -d "payment[bank_account_name]=中国银行" \
 -d "payment[bank_account_city]=北京" \
 -d "payment[bank_account_branch]=朝阳门支行" \
-https://sandbox.remitsy.com/apis/general/v1/new
+https://alpha-remitsy.herokuapp.com/apis/pro/v1/bank_deposit
 ```
 
 > The above commands returns JSON structured like this:
@@ -308,36 +307,33 @@ https://sandbox.remitsy.com/apis/general/v1/new
 ```json
 {"errors": {
   "token": [
-    "Invalid Token", 
-    "Expired Quote"
+    "Expired or invalid token"
   ],
-  "name_cn": [
-    "can't be blank"
+  "contact_name": [
+    "Required field"
   ],
   "bank_account_number": [
-    "can't be blank",
-    "invalid"
+    "Required field",
+    "Invalid format"
   ],
   "bank_account_name": [
-    "can't be blank"
+    "Required field"
   ],
   "bank_account_city": [
-    "can't be blank"
+    "Required field"
   ],
   "bank_account_branch": [
-    "can't be blank"
+    "Required field"
   ],
   "email":[
     "invalid Email",
-    "can't be blank"
+    "Required field"
   ],
   "phone":[
-    "Phone number is not valid",
-    "can't be blank"
+    "Required field"
   ],
   "identity_card_number":[
-    "can't be blank",
-    "Failed Checksum"
+    "Required field",
   ]}
 }
 ```
@@ -365,7 +361,7 @@ Use a Quote token to book a new Payment at the quoted rate.
 
 ### HTTP Request
 
-`POST https://sandbox.remitsy.com/apis/general/v1/bank_deposit`
+`POST https://alpha-remitsy.herokuapp.com/apis/pro/v1/bank_deposit`
 
 ### Request Parameters
 
@@ -373,9 +369,9 @@ Parameter | Type | Default | Description
 --------- | ---- | ------- | -----------
 payment[email] | String(255) | | **Optional**, the Recipient's email, used for notifications.
 payment[phone] | String(255) | | The Recipient's phone number, used for KYC and notifications. 
-payment[name_cn] | String(255) | | Full name in simplified Chinese Characters UTF-8 encoded.
+payment[contact_name] | String(255) | | Full name in simplified Chinese Characters UTF-8 encoded.
 payment[identity_card_number] | String(18) | | National ID card, used for KYC.
-payment[token] | String(10) | | Provide a Quote token to claim the rate and amount.
+quote[token] | String(10) | | Provide a Quote token to claim the rate and amount.
 payment[bank_account_number] | String(19) | | Chinese bank account number 15-19 numerals long.
 payment[bank_account_name] | String(255) | | Full name in simplified Chinese Characters UTF-8 encoded
 payment[bank_account_city] | String(255) | | Name in simplified Chinese Characters UTF-8 encoded
@@ -394,37 +390,30 @@ payment[payment_ref] | String(8) | For future reference.
 
 Parameter | Description
 --------- | -----------
+error[token] | Invalid token, no Quote found.
 error[bank_account_number] | `^[0-9]{15,19}$`
 error[bank_account_name] | Required field
 error[bank_account_city] | Required field
 error[bank_account_branch] | Required field
 error[phone] | `^(13[0-9]&#124;14[57]&#124;15[012356789]&#124;17[0678]&#124;18[0-9])[0-9]{8}$` 
 error[email] | `/\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i`
-error[name_cn] | Required Field
+error[contact_name] | Required Field
 error[identity_card_number] | Failed Checksum
 error[immediate_release] | Must be either true or false
-
-`Status 404 NOT FOUND`
-
-Parameter | Description
---------- | -----------
-error[token] | Invalid token, no Quote found.
-
-
 
 ## Release a Payment
 
 ```shell
 curl -X POST \
 -H 'Authorization: Token token="<API KEY>"' \
--d "payment[payment_ref]=12345678" \
-https://sandbox.remitsy.com/apis/general/v1/release
+-d "payment[payment_ref]=<PAYMENT_REF>" \
+https://alpha-remitsy.herokuapp.com/apis/pro/v1/release
 ```
 
 > The above command returns JSON structured like this:
 
 ```json
-{ "release_ref": "12345678" }
+{ "payment": { "release_ref": "12345678" } }
 ```
 
 > Errors structured like this:
@@ -442,7 +431,7 @@ Releases a payment previously booked with the immediate_release attribute set to
 
 ### HTTP Request
 
-`PATCH https://sandbox.remitsy.com/apis/general/v1/release`
+`POST https://alpha-remitsy.herokuapp.com/apis/pro/v1/release`
 
 ### Request Parameters
 
@@ -477,8 +466,8 @@ error[payment_ref] | Invalid payment_ref, no Payment found.
 ```shell
 curl -X POST \
 -H 'Authorization: Token token="<API KEY>"' \
--d "payment[payment_ref]=12345678" \
-https://sandbox.remitsy.com/apis/general/v1/cancel
+-d "payment[payment_ref]=<PAYMENT REF>" \
+https://alpha-remitsy.herokuapp.com/apis/pro/v1/cancel
 ```
 
 > The above command returns JSON structured like this:
@@ -502,7 +491,7 @@ This endpoint cancels an unreleased payment.
 
 ### HTTP Request
 
-`PATCH https://sandbox.remitsy.com/apis/pro/v1/cancel`
+`POST https://alpha-remitsy.herokuapp.com/apis/pro/v1/cancel`
 
 ### Request Parameters
 
@@ -538,8 +527,8 @@ error[payment_ref] | Invalid payment_ref, no Payment found.
 ```shell
 curl -X POST \
 -H 'Authorization: Token token="<API KEY>"' \
--d "payment[payment_ref]=12345678" \
-https://sandbox.remitsy.com/apis/pro/v1/status
+-d "payment[payment_ref]=<PAYMENT REF>" \
+https://alpha-remitsy.herokuapp.com/apis/pro/v1/status
 ```
 
 > The above command returns JSON structured like this:
@@ -557,9 +546,8 @@ https://sandbox.remitsy.com/apis/pro/v1/status
     "release_ref": "12345678",
     "cancel_ref": "123456",
     "payment_ref": "1234567890",
-    "alipay_id": "",
+    "alipay_identifier": "",
     "status": "Released",
-    "note": "Free text",
     "created_at": "2016-06-14 17:18:38 +0100"
   },
   "quote": {
@@ -589,7 +577,7 @@ Additionally useful in debugging and automated testing in a sandbox environment.
 
 ### HTTP Request
 
-`GET https://sandbox.remitsy.com/apis/pro/v1/status`
+`GET https://alpha-remitsy.herokuapp.com/apis/pro/v1/status`
 
 ### Request Parameters
 
@@ -612,9 +600,8 @@ payment[bank_account_branch] | String(255) | | Name in simplified Chinese Charac
 payment[immediate_release] | Boolean(true&#124;false) | true | **Optional**, set to false to hold payment until you release the payment. This allows additional KYC checks to be performed inline with your existing business flows.
 payment[release_ref] | String(8)| | Reference to the action of releasing this a payment. If cancelled or booked this will be empty
 payment[cancel_ref] | String(6) | | Reference to the action of cancelling this a payment. If booked or released this will be empty
-payment[alipay_id] | String(255) | | Like a PayPal ID, can be a email, phone number or serial number.
+payment[alipay_identifier] | String(255) | | Like a PayPal ID, can be a email, phone number or serial number.
 payment[status] | String(255) | | Can be Booked, Cancelled or Released
-payment[note] | String(255) | | Notes
 payment[created_at] | timestamp | | Payment created at.
 quote[rate] | Decimal(4.6) | | The rate includes our fee.
 quote[token] | String(10) | | Unique identifier for Quote
@@ -626,7 +613,7 @@ quote[created_at] | Timestamp | | Quote Created At
 
 <aside class="notice">
   Please note; out of an abundance of caution, the status does not show the 
-  <strong>name_cn</strong> and <strong>identity_card_number</strong>. These 
+  <strong>contact_name</strong> and <strong>identity_card_number</strong>. These 
   attributes are potentially sensitive information. Please use your own 
   records to access these details if they are required.
 </aside>
