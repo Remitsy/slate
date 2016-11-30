@@ -291,7 +291,6 @@ curl -X POST \
 -d "payment[identity_card_number]=110101198109022323" \
 -d "payment[bank_account_number]=6212260200082726700" \
 -d "payment[bank_account_name]=中国银行" \
--d "payment[bank_account_city]=北京" \
 -d "payment[bank_account_branch]=朝阳门支行" \
 https://sandbox-remitsy.herokuapp.com/apis/pro/v1/bank_deposit
 ```
@@ -317,9 +316,6 @@ https://sandbox-remitsy.herokuapp.com/apis/pro/v1/bank_deposit
     "Invalid format"
   ],
   "bank_account_name": [
-    "Required field"
-  ],
-  "bank_account_city": [
     "Required field"
   ],
   "bank_account_branch": [
@@ -374,8 +370,7 @@ payment[identity_card_number] | String(18) | | National ID card, used for KYC.
 quote[token] | String(10) | | Provide a Quote token to claim the rate and amount.
 payment[bank_account_number] | String(19) | | Chinese bank account number 15-19 numerals long.
 payment[bank_account_name] | String(255) | | Full name in simplified Chinese Characters UTF-8 encoded
-payment[bank_account_city] | String(255) | | Name in simplified Chinese Characters UTF-8 encoded
-payment[bank_account_branch] | String(255) | | Name in simplified Chinese Characters UTF-8 encoded
+payment[bank_account_branch] | String(255) | | Full branch name including branch location in simplified Chinese Characters UTF-8 encoded.
 payment[immediate_release] | Boolean(true&#124;false) | true | **Optional**, set to false to hold payment until you release the payment. This allows additional KYC checks to be performed inline with your existing business flows.
 
 ### Response
@@ -525,7 +520,7 @@ error[payment_ref] | Invalid payment_ref, no Payment found.
 
 
 ```shell
-curl -X POST \
+curl -X GET \
 -H 'Authorization: Token token="<API KEY>"' \
 -d "payment[payment_ref]=<PAYMENT REF>" \
 https://sandbox-remitsy.herokuapp.com/apis/pro/v1/status
@@ -595,8 +590,7 @@ payment[email] | String(255) | | **Optional**, the recipient's email. Used for n
 payment[phone] | String(255) | | The recipient's phone number. Used for KYC and SMS notification
 payment[bank_account_number] | String(19) | | Recipient's Chinese bank account number
 payment[bank_account_name] | String(255) | | Recipient's Chinese account name
-payment[bank_account_city] | String(255) | | Name in simplified Chinese Characters UTF-8 encoded
-payment[bank_account_branch] | String(255) | | Name in simplified Chinese Characters UTF-8 encoded
+payment[bank_account_branch] | String(255) | | Full branch name including branch location in simplified Chinese Characters UTF-8 encoded.
 payment[immediate_release] | Boolean(true&#124;false) | true | **Optional**, set to false to hold payment until you release the payment. This allows additional KYC checks to be performed inline with your existing business flows.
 payment[release_ref] | String(8)| | Reference to the action of releasing this a payment. If cancelled or booked this will be empty
 payment[cancel_ref] | String(6) | | Reference to the action of cancelling this a payment. If booked or released this will be empty
