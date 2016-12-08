@@ -3,6 +3,7 @@ title: API Reference
 
 language_tabs:
   - shell
+  - java
 
 toc_footers:
   - <a href='http://github.com/tripit/slate'>Documentation Powered by Slate</a>
@@ -180,6 +181,80 @@ curl -X POST \
 -d "payment[identity_card_number]=110101198109022323" \
 https://sandbox-remitsy.herokuapp.com/apis/pro/v1/alipay
 ```
+
+```java
+package com.mycompany.app;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.List;
+
+public class App 
+{
+    public static void main( String[] args ) throws NoSuchAlgorithmException, KeyManagementException, IOException {
+        X509TrustManager x509mgr = new X509TrustManager() {
+            public void checkClientTrusted(X509Certificate[] xcs, String string) {
+            }
+            public void checkServerTrusted(X509Certificate[] xcs, String string) {
+            }
+            public X509Certificate[] getAcceptedIssuers() {
+                return null;
+            }
+        };
+        SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
+        sslContext.init(null, new TrustManager[] { x509mgr }, null);
+        SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext, SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+        CloseableHttpClient httpclient  = HttpClients.custom().setSSLSocketFactory(sslsf).build();
+
+        HttpPost method = new HttpPost("https://sandbox-remitsy.herokuapp.com/apis/pro/v1/alipay");
+        //HttpGet method = new HttpGet("https://sandbox-remitsy.herokuapp.com/apis/pro/v1/ping");
+
+        method.addHeader("Content-type","application/x-www-form-urlencoded; charset=utf-8");
+
+        String authString = "Token token=92eea086bdf937ea836336fed5903475";
+        method.addHeader("Authorization", authString);
+
+        List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+        nvps.add(new BasicNameValuePair("payment[alipay_identifier]", "test@163.com"));
+        nvps.add(new BasicNameValuePair("payment[phone]", "13805710571"));
+        nvps.add(new BasicNameValuePair("payment[email]", "test@163.com"));
+        nvps.add(new BasicNameValuePair("payment[contact_name]", "中文"));
+        nvps.add(new BasicNameValuePair("payment[identity_card_number]", "330623198003121231"));
+        nvps.add(new BasicNameValuePair("quote[token]", "0282d75596025b613b"));
+        nvps.add(new BasicNameValuePair("payment[immediate_release]", "true"));
+        method.setEntity(new UrlEncodedFormEntity(nvps, "UTF-8")); // Please note: 'UTF-8'
+
+
+        HttpResponse response = httpclient.execute(method);
+
+        int statusCode = response.getStatusLine().getStatusCode();
+
+        // Read the response body
+        String body = EntityUtils.toString(response.getEntity());
+
+        System.out.println("body:"+body);
+    }
+}
+```
+
+
 
 > The above commands returns JSON structured like this:
 
