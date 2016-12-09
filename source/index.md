@@ -228,15 +228,15 @@ public class App
 
         method.addHeader("Content-type","application/x-www-form-urlencoded; charset=utf-8");
 
-        String authString = "Token token=92eea086bdf937ea836336fed5903475";
+        String authString = "Token token=xxbdf35771s167937ea836336fed5903475";
         method.addHeader("Authorization", authString);
 
         List<NameValuePair> nvps = new ArrayList<NameValuePair>();
         nvps.add(new BasicNameValuePair("payment[alipay_identifier]", "test@163.com"));
-        nvps.add(new BasicNameValuePair("payment[phone]", "13805710571"));
+        nvps.add(new BasicNameValuePair("payment[phone]", "13805700571"));
         nvps.add(new BasicNameValuePair("payment[email]", "test@163.com"));
         nvps.add(new BasicNameValuePair("payment[contact_name]", "中文"));
-        nvps.add(new BasicNameValuePair("payment[identity_card_number]", "330623198003121231"));
+        nvps.add(new BasicNameValuePair("payment[identity_card_number]", "xx67795218003121231"));
         nvps.add(new BasicNameValuePair("quote[token]", "0282d75596025b613b"));
         nvps.add(new BasicNameValuePair("payment[immediate_release]", "true"));
         method.setEntity(new UrlEncodedFormEntity(nvps, "UTF-8")); // Please note: 'UTF-8'
