@@ -237,7 +237,7 @@ public class App
         nvps.add(new BasicNameValuePair("payment[email]", "test@163.com"));
         nvps.add(new BasicNameValuePair("payment[contact_name]", "中文"));
         nvps.add(new BasicNameValuePair("payment[identity_card_number]", "xx67795218003121231"));
-        nvps.add(new BasicNameValuePair("quote[token]", "0282d75596025b613b"));
+        nvps.add(new BasicNameValuePair("quote[token]", "xx82d75596025b613b"));
         nvps.add(new BasicNameValuePair("payment[immediate_release]", "true"));
         method.setEntity(new UrlEncodedFormEntity(nvps, "UTF-8")); // Please note: 'UTF-8'
 
