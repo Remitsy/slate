@@ -122,7 +122,7 @@ which is used to claim the quoted exchange rate in a subsequent Payment booking.
 
 ### HTTP Request
 
-`POST https://sandbox-remitsy.herokuapp.com/apis/pro/v1/rates`
+`POST https://sandbox-remitsy.herokuapp.com/apis/pro/v1/quote`
 
 ### Request Parameters
 
