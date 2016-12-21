@@ -327,7 +327,7 @@ Parameter | Type | Default | Description
 payment[alipay_identifier] | String(255) | | Like a PayPal ID, can be a email, phone number or serial number.
 payment[email] | String(255) | | **Optional**, the Recipient's email, used for notifications.
 payment[phone] | String(255) | | The Recipient's phone number, used for KYC and notifications. 
-payment[contact_name] | String(255) | | Full name in simplified Chinese Characters UTF-8 encoded.
+payment[contact_name] | String(255) | | The Recipient’s full name in simplified Chinese characters UTF-8 encoded. 
 payment[identity_card_number] | String(18) | | National ID card, used for KYC.
 quote[token] | String(10) | | Provide a Quote token to claim the rate and amount.
 payment[immediate_release] | Boolean(true&#124;false) | true | **Optional**, set to false to hold payment until you release the payment. This allows additional KYC checks to be performed inline with your existing business flows.
