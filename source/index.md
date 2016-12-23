@@ -92,7 +92,7 @@ https://sandbox-remitsy.herokuapp.com/apis/pro/v1/quote
 ```json
 {"errors": {
   "source_currency": [
-    "Must be one of HKD, EUR, USD, PLN or GBP",
+    "Must be one of USD, AUD, CAD, EUR, GBP, HKD, INR or PLN",
     "can't be blank"
   ],
   "source_cents": [
@@ -128,7 +128,7 @@ which is used to claim the quoted exchange rate in a subsequent Payment booking.
 
 Parameter | Default | Type | Description
 --------- | ------- | ---- | -----------
-quote[source_currency] | USD | String(3) | Currently supports HKD, EUR, USD, GBP, PLN
+quote[source_currency] | USD | String(3) | Currently supports USD, AUD, CAD, EUR, GBP, HKD, INR or PLN
 quote[source_cents] | 0 | Integer(8) | If set to null, then the quote_cents attribute must be specified.
 quote[quote_cents] | null | Integer(8) | If set to null, then the source_cents attribute must be specified. 
 
@@ -144,7 +144,7 @@ Parameter | Default | Type | Description
 --------- | ------- | ---- | -----------
 quote[token] |  | String(10) | Use this token to claim a rate when submitting a new Payment. 
 quote[rate] |  | Decimal(4.6) | The rate includes our fee. 
-quote[currency_pair] | USDCNY | String(3) | The format is [SOURCE][QUOTE]. Currently accepts HKDCNY, EURCNY, USDCNY, GBPCNY, PLNCNY.
+quote[currency_pair] | USDCNY | String(3) | The format is [SOURCE][QUOTE]. Currently accepts USDCNY, AUDCNY, CADCNY, EURCNY, GBPCNY, HKDCNY, INRCNY or PLNCNY.
 quote[source_cents] | 0 | Integer(8) | Half even rounding. 
 quote[quote_cents] | 0 | Integer(8) | Half even rounding. 
 quote[expire_at] | 30min | Unix Timestamp | Quotes will expire if not used to make a booking before the expiry_at attribute. Default value is 30 minutes.
@@ -162,7 +162,7 @@ quote[expire_at] | 30min | Unix Timestamp | Quotes will expire if not used to ma
 
 Parameter | Description
 --------- | -----------
-error[source_currency] | Must be one of HKD EUR USD PLN GBP. 
+error[source_currency] | Must be one of USD, AUD, CAD, EUR, GBP, HKD, INR or PLN. 
 error[source_cents] | Must be an integer. 
 
 ## Book an AliPay Payment
@@ -674,7 +674,7 @@ payment[status] | String(255) | | Can be Booked, Cancelled or Released
 payment[created_at] | timestamp | | Payment created at.
 quote[rate] | Decimal(4.6) | | The rate includes our fee.
 quote[token] | String(10) | | Unique identifier for Quote
-quote[source_currency] | String(3) | | Currently accepts HKD, EUR, USD, GBP, PLN.
+quote[source_currency] | String(3) | | Currently accepts USD, AUD, CAD, EUR, GBP, HKD, INR or PLN.
 quote[source_cents]	| Integer(8) | | Half even rounding.
 quote[quote_cents] | Integer(8) | null | Half even rounding.
 quote[expire_at] | Unix Timestamp | 30min | Quotes will expire if not used to make a booking within the time limit.
