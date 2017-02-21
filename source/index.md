@@ -175,6 +175,7 @@ curl -X POST \
 -d "quote[token]=<QUOTE TOKEN>" \
 -d "payment[alipay_identifier]=1235812895" \
 -d "payment[email]=richard@163.com" \
+-d "payment[webhook_url]=https://example.com/webhook/endpoint/1234" \
 -d "payment[phone]=13810456155" \
 -d "payment[contact_name]=贝礼德" \
 -d "payment[immediate_release]=false" \
@@ -262,6 +263,12 @@ public class App
 { "payment":{ "payment_ref": "xxxxxxxxxxxx" }}
 ```
 
+> The webhook_url will make a POST request and deliver the below JSON. Please check the payment_ref to confirm the source of this request. If the webhook URL is not responding with a 201 it will be considered to have failed. Failed attempts will be automatically retried with an exponential back-off, with a maximum of 25 attempts.
+
+```json
+{ "payment": { "payment_ref": "xxxxxxxxxx", "status": "completed" }}
+```
+
 > Errors structured like this:
 
 ```json
@@ -275,6 +282,10 @@ public class App
   "email":[
     "is invalid",
     "Required field"
+  ],
+  "webhook_url":[
+    "Must use HTTPS",
+    "Invalid URL"
   ],
   "phone":[
     "Required field"
@@ -326,6 +337,7 @@ Parameter | Type | Default | Description
 --------- | ---- | ------- | -----------
 payment[alipay_identifier] | String(255) | | Like a PayPal ID, can be a email, phone number or serial number.
 payment[email] | String(255) | | **Optional**, the Recipient's email, used for notifications.
+payment[webhook_url] | String(255) | | **Optional**, triggered upon status change from 'booked' to 'completed' or 'cancelled'. Must respond to a POST request with a code 201. Must use HTTPS.
 payment[phone] | String(255) | | The Recipient's phone number, used for KYC and notifications. 
 payment[contact_name] | String(255) | | Full name in simplified Chinese Characters UTF-8 encoded.
 payment[identity_card_number] | String(18) | | National ID card, used for KYC.
@@ -348,6 +360,7 @@ error[token] | Invalid token, no Quote found.
 error[alipay_identifier] | Required Field 
 error[phone] | `^(13[0-9]&#124;14[57]&#124;15[012356789]&#124;17[0678]&#124;18[0-9])[0-9]{8}$` 
 error[email] | `/\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i`
+error[webhook_url] | Must use HTTPS. Filtered by Ruby 2.2.4 [URI.escape](https://ruby-doc.org/stdlib-2.2.4/libdoc/uri/rdoc/URI/Escape.html)
 error[contact_name] | Required Field
 error[identity_card_number] | Must pass the checksum
 error[immediate_release] | Must be either true or false
@@ -361,6 +374,7 @@ curl -X POST \
 -H 'Authorization: Token token="<API KEY>"' \
 -d "quote[token]=<QUOTE TOKEN>" \
 -d "payment[email]=richard@163.com" \
+-d "payment[webhook_url]=https://example.com/webhook/endpoint/1234" \
 -d "payment[phone]=13810456155" \
 -d "payment[contact_name]=贝礼德" \
 -d "payment[identity_card_number]=110101198109022323" \
@@ -374,6 +388,12 @@ https://sandbox-remitsy.herokuapp.com/apis/pro/v1/bank_deposit
 
 ```json
 { "payment": { "payment_ref": "xxxxxxxxxx" }}
+```
+
+> The webhook_url will make a POST request and deliver the below JSON. Please check the payment_ref to confirm the source of this request. If the webhook URL is not responding with a 201 it will be considered to have failed. Failed attempts will be automatically retried with an exponential back-off, with a maximum of 25 attempts.
+
+```json
+{ "payment": { "payment_ref": "xxxxxxxxxx", "status": "completed" }}
 ```
 
 > Errors structured like this:
@@ -397,8 +417,12 @@ https://sandbox-remitsy.herokuapp.com/apis/pro/v1/bank_deposit
     "Required field"
   ],
   "email":[
-    "invalid Email",
+    "Invalid Email",
     "Required field"
+  ],
+  "webhook_url":[
+    "Must use HTTPS",
+    "Invalid URL"
   ],
   "phone":[
     "Required field"
@@ -439,6 +463,7 @@ Use a Quote token to book a new Payment at the quoted rate.
 Parameter | Type | Default | Description
 --------- | ---- | ------- | -----------
 payment[email] | String(255) | | **Optional**, the Recipient's email, used for notifications.
+payment[webhook_url] | String(255) | | **Optional**, triggered upon status change from 'booked' to 'completed' or 'cancelled'. Must respond to a POST request with a code 201. Must use HTTPS.
 payment[phone] | String(255) | | The Recipient's phone number, used for KYC and notifications. 
 payment[contact_name] | String(255) | | Full name in simplified Chinese Characters UTF-8 encoded.
 payment[identity_card_number] | String(18) | | National ID card, used for KYC.
@@ -467,6 +492,7 @@ error[bank_account_city] | Required field
 error[bank_account_branch] | Required field
 error[phone] | `^(13[0-9]&#124;14[57]&#124;15[012356789]&#124;17[0678]&#124;18[0-9])[0-9]{8}$` 
 error[email] | `/\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i`
+error[webhook_url] | Must use HTTPS. Filtered by Ruby 2.2.4 [URI.escape](https://ruby-doc.org/stdlib-2.2.4/libdoc/uri/rdoc/URI/Escape.html)
 error[contact_name] | Required Field
 error[identity_card_number] | Failed Checksum
 error[immediate_release] | Must be either true or false
