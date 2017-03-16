@@ -719,3 +719,72 @@ Parameter | Description
 --------- | -----------
 error[payment_ref] | Invalid payment_ref, no Payment found.
 
+## Test your webhooks
+
+<aside class="notice">
+  <strong>The testing endpoint is only available on the sandbox server. Not available on any production environment.</strong>
+</aside>
+
+```shell
+curl -X POST \
+-H 'Authorization: Token token="<API KEY>"' \
+-d "payment[payment_ref]=<PAYMENT REF>" \
+-d "payment[new_status]=cancelled" \
+https://sandbox-remitsy.herokuapp.com/apis/pro/v1/webhook_test
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+  "payment": {
+    "payment_ref": "DENCQ",
+    "new_status": "cancelled"
+  }
+}
+```
+
+> Errors structured like this:
+
+```json
+{"errors": {
+  "payment_ref": [
+    "The new status can only be either 'completed' or 'cancelled'.",
+    "Invalid Payment_ref. No Payment found."
+  ]}
+}
+```
+
+This endpoint is useful in debugging and automated testing in a sandbox environment. 
+
+### HTTP Request
+
+`GET https://sandbox-remitsy.herokuapp.com/apis/pro/v1/webhook_test`
+
+### Request Parameters
+
+Parameter | Type | Description
+--------- | ---- | -----------
+payment[payment_ref] | String(6) | A unique reference to a Payment
+
+### Response
+
+`Status 201 OK`
+
+Parameter | Description
+--------- | -----------
+payment[payment_ref] | For reference
+payment[new_status] | The new status of the referenced payment 
+
+`Status 422 UNPROCESSABLE ENTITY`
+
+Parameter | Description
+--------- | -----------
+error[new_status] | The new status can only be either 'completed' or 'cancelled'.
+
+`Status 404 NOT FOUND`
+
+Parameter | Description
+--------- | -----------
+error[payment_ref] | Invalid payment_ref, no Payment found.
+
