@@ -725,6 +725,11 @@ error[payment_ref] | Invalid payment_ref, no Payment found.
   <strong>The testing endpoint is only available on the sandbox server. Not available on any production environment.</strong>
 </aside>
 
+<aside class="notice">
+  <strong>The provided webhook MUST return a 201 response, otherwise the webhook url will be repeatedly called via a POST request 25 times until a 201 is returned.</strong>
+</aside>
+
+
 ```shell
 curl -X POST \
 -H 'Authorization: Token token="<API KEY>"' \
