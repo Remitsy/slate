@@ -178,7 +178,7 @@ curl -X POST \
 -d "payment[webhook_url]=https://example.com/webhook/endpoint/1234" \
 -d "payment[phone]=13810456155" \
 -d "payment[contact_name]=贝礼德" \
--d "payment[immediate_release]=false" \
+-d "payment[immediate_release]=true" \
 -d "payment[identity_card_number]=110101198109022323" \
 https://sandbox-remitsy.herokuapp.com/apis/pro/v1/alipay
 ```
@@ -378,6 +378,7 @@ curl -X POST \
 -d "payment[phone]=13810456155" \
 -d "payment[contact_name]=贝礼德" \
 -d "payment[identity_card_number]=110101198109022323" \
+-d "payment[immediate_release]=true" \
 -d "payment[bank_account_number]=6212260200082726700" \
 -d "payment[bank_account_name]=中国银行" \
 -d "payment[bank_account_branch]=朝阳门支行" \
@@ -638,7 +639,7 @@ https://sandbox-remitsy.herokuapp.com/apis/pro/v1/status
     "bank_account_name": "中国银行",
     "bank_account_city": "北京",
     "bank_account_branch": "朝阳门支行",
-    "immediate_release": false, 
+    "immediate_release": true, 
     "release_ref": "12345678",
     "cancel_ref": "123456",
     "payment_ref": "1234567890",
